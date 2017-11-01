@@ -1,0 +1,3 @@
+/*nested subquery*/
+select*from TABLE1 where VARIABLE1 in (select VARIABLE1 from TABLE2);
+select*from TABLE1 where VARIABLE1 in (select VARIABLE1 from TABLE2 where VARIABLE2 =/like/...operators);
