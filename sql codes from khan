@@ -97,3 +97,91 @@ else "F"
 end as "letter_grade"
 from student_grades
 group by letter_grade;
+
+
+
+CREATE TABLE students (id INTEGER PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    email TEXT,
+    phone TEXT,
+    birthdate TEXT);
+
+INSERT INTO students (first_name, last_name, email, phone, birthdate)
+    VALUES ("Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24");
+INSERT INTO students (first_name, last_name, email, phone, birthdate)
+    VALUES ("Alice", "Wonderland", "alice@wonderland.com", "555-4444", "2002-07-04");
+    
+CREATE TABLE student_grades (id INTEGER PRIMARY KEY,
+    student_id INTEGER,
+    test TEXT,
+    grade INTEGER);
+
+INSERT INTO student_grades (student_id, test, grade)
+    VALUES (1, "Nutrition", 95);
+INSERT INTO student_grades (student_id, test, grade)
+    VALUES (2, "Nutrition", 92);
+INSERT INTO student_grades (student_id, test, grade)
+    VALUES (1, "Chemistry", 85);
+INSERT INTO student_grades (student_id, test, grade)
+    VALUES (2, "Chemistry", 95);
+
+/* match two tables horizontally */
+
+/* cross join */
+SELECT * FROM student_grades, students;
+
+/* implicit inner join */
+SELECT * FROM student_grades, students
+    WHERE student_grades.student_id = students.id;
+    
+/* explicit inner join - JOIN */
+SELECT first_name, last_name, email, test, grade FROM students
+    JOIN student_grades
+    ON students.id = student_grades.student_id
+    WHERE grade > 90;
+
+
+
+select persons.name,hobbies.name from persons /* two tables in one select*from */  /* denote which varibles to be output*/
+join hobbies  /* table after FROM should be different from table after JOIN*/ /* left table after FROM, right table after JOIN*/
+on persons.id=hobbies.person_id;
+
+
+/* left outer join */
+SELECT students.first_name, students.last_name, student_projects.title
+    FROM students
+    LEFT OUTER JOIN student_projects /* the OUTER tells it that it should retain the rows even if there is no match in the right table, which is students_project*/
+    ON students.id = student_projects.student_id;
+    
+Now, create another query that will result in one row per each customer, with their name, email, and total amount of money they've spent on orders. Sort the rows according to the total money spent, from the most spent to the least spent.
+(Tip: You should always GROUP BY on the column that is most likely to be unique in a row.)
+
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT);
+    
+INSERT INTO customers (name, email) VALUES ("Doctor Who", "doctorwho@timelords.com");
+INSERT INTO customers (name, email) VALUES ("Harry Potter", "harry@potter.com");
+INSERT INTO customers (name, email) VALUES ("Captain Awesome", "captain@awesome.com");
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER,
+    item TEXT,
+    price REAL);
+
+INSERT INTO orders (customer_id, item, price)
+    VALUES (1, "Sonic Screwdriver", 1000.00);
+INSERT INTO orders (customer_id, item, price)
+    VALUES (2, "High Quality Broomstick", 40.00);
+INSERT INTO orders (customer_id, item, price)
+    VALUES (1, "TARDIS", 1000000.00);
+    
+
+select name, email, sum(price) as total from customers
+left outer join orders
+on customers.id = orders.customer_id
+group by name
+order by total desc;
