@@ -151,7 +151,9 @@ on persons.id=hobbies.person_id;
 /* left outer join */
 SELECT students.first_name, students.last_name, student_projects.title
     FROM students
-    LEFT OUTER JOIN student_projects /* the OUTER tells it that it should retain the rows even if there is no match in the right table, which is students_project*/
+    LEFT OUTER JOIN student_projects 
+    /* the OUTER tells it that it should retain the rows even if there is no match in the right table, which is students_project*/
+    /* keep every row in students data set*/
     ON students.id = student_projects.student_id;
     
 Now, create another query that will result in one row per each customer, with their name, email, and total amount of money they've spent on orders. Sort the rows according to the total money spent, from the most spent to the least spent.
@@ -185,3 +187,28 @@ left outer join orders
 on customers.id = orders.customer_id
 group by name
 order by total desc;
+
+/* self join */
+CREATE TABLE students (id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT,
+    last_name TEXT,
+    email TEXT,
+    phone TEXT,
+    birthdate TEXT,
+    buddy_id INTEGER);
+
+INSERT INTO students 
+    VALUES (1, "Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24", 2);
+INSERT INTO students 
+    VALUES (2, "Alice", "Wonderland", "alice@wonderland.com", "555-4444", "2002-07-04", 1);
+INSERT INTO students 
+    VALUES (3, "Aladdin", "Lampland", "aladdin@lampland.com", "555-3333", "2001-05-10", 4);
+INSERT INTO students 
+    VALUES (4, "Simba", "Kingston", "simba@kingston.com", "555-1111", "2001-12-24", 3);
+    
+SELECT id, first_name, last_name, buddy_id FROM students;
+
+SELECT students.first_name, students.last_name, buddies.email as buddy_email
+    FROM students
+    JOIN students buddies
+    ON students.buddy_id = buddies.id;
